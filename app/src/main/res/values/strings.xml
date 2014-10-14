@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NotificationService</string>
+    <string name="hello_world">Servicio para la Detección de Notificaciónes</string>
+
+    <string name="description_layout">Para iniciar el servicio dirigirse a Settings -> Accessibility -> NotificationService y activaer el servicio</string>
+
+    <string name="img_service">Image Activate Service</string>
+
+    <string name="accessibility_service_description">Descripcion de servicio...</string>
+
+    <string name="notification_description">Servicio de Notificaciones Activado</string>
+    <string name="notif_tittle_text">Servicio de Notificacion</string>
+    <string name="notif_contento_text">Servicio Activado</string>
+
+
+</resources>
