@@ -18,9 +18,6 @@ public class NotifierService extends AccessibilityService {
 
     static final String TAG = "notification-Service";
 
-    NotificationManager notificationManager = (NotificationManager)
-            getSystemService(NOTIFICATION_SERVICE);
-
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         Log.i(TAG, "onAccessibilityEvent");
@@ -53,18 +50,19 @@ public class NotifierService extends AccessibilityService {
         info.notificationTimeout = 100;
         setServiceInfo(info);
 
-        Notification notification = configureNotifications();
-
-        notificationManager.notify(0, notification);
+        // Show notification when service is started
+        showNotification(true);
     }
 
     @Override
     public void onDestroy(){
-        notificationManager.cancel(0);
+        Log.i(TAG,"omDestroy");
+
+        // Delete the notification when service is stopped
+        showNotification(false);
     }
 
-    // Parameter for notifications when the service is started.
-    private Notification configureNotifications(){
+    private void showNotification(boolean show){
         Resources r = getResources();
 
         PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this,MyActivity.class), 0);
@@ -78,8 +76,15 @@ public class NotifierService extends AccessibilityService {
                 .setAutoCancel(false)
                 .build();
 
-        return notification;
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+
+        if (show)
+            notificationManager.notify(0, notification);
+        else
+            notificationManager.cancel(0);
     }
+
 
     // Method for management notification
     private void notificationManager(CharSequence pachageName, boolean incomingNotification){
