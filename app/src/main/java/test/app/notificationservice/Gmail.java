@@ -21,7 +21,7 @@ public class Gmail {
     // Method for write in firebase.
     public void alertGmail(boolean isNotifPosted){
         Log.i(TAG,"startAlertG");
-        ref = new Firebase("https://flickering-inferno-1612.firebaseio.com/Users"); // Main url in the firebase.
+        ref = new Firebase("https://...com/Users"); // Main url in the firebase.
         userChild = ref.child("User2"); // Child url for the user.
         appChild = userChild.child("Gmail"); // Child url for app.
 
