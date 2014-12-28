@@ -18,32 +18,57 @@ public class Facebook {
     Firebase appChild;
     String TAG = "Facebook";
 
-    public void startAlertF(){
+    // Method for write in firebase.
+    public void alertFacebook(boolean isNotifPosted){
         Log.i(TAG,"startAlertF");
-        Firebase.setAndroidContext(MyActivity.getAppContext());
-        ref = new Firebase("https://flickering-inferno-1612.firebaseio.com/Users");
-        userChild = ref.child("User1");
-        appChild = userChild.child("Facebook");
+        ref = new Firebase("https://flickering-inferno-1612.firebaseio.com/Users"); // Main url in the firebase.
+        userChild = ref.child("User2"); // Child url for the user.
+        appChild = userChild.child("Facebook"); // Child url for app.
 
-        //appChild.setValue(321);
+        // Validate if is notification posted
+        if (isNotifPosted){
+            // Transaction for add an pointer for the notification.
+            appChild.runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData data) {
+                    if (data.getValue() == null){
+                        // The value is one if this is the first notification.
+                        Log.i(TAG,"onPost");
+                        data.setValue(1);
+                    }
+                    else{
+                        // If the valué is different from null get the valué and add plus one.
+                        data.setValue((Long)data.getValue()+1);
+                    }
 
-        appChild.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData data) {
-                if (data.getValue() == null){
-                    data.setValue(1);
+                    return Transaction.success(data);
                 }
-                else{
-                    data.setValue((Long)data.getValue()+1);
+
+                @Override
+                public void onComplete(FirebaseError firebaseError, boolean b, DataSnapshot dataSnapshot) {
+
+                }
+            });
+        }
+        else{
+            // Transaction for delete an pointer for the notification.
+            appChild.runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData data) {
+                    if (data.getValue() != null){
+                        // Delete the pointer if exist one or more notifications.
+                        Log.i(TAG,"onDelete");
+                        data.setValue((Long)data.getValue()-1);
+                    }
+
+                    return Transaction.success(data);
                 }
 
-                return Transaction.success(data);
-            }
+                @Override
+                public void onComplete(FirebaseError firebaseError, boolean b, DataSnapshot dataSnapshot) {
 
-            @Override
-            public void onComplete(FirebaseError firebaseError, boolean b, DataSnapshot dataSnapshot) {
-
-            }
-        });
+                }
+            });
+        }
     }
 }

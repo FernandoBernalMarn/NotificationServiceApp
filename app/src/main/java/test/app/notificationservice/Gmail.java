@@ -18,29 +18,49 @@ public class Gmail {
     Firebase appChild;
     static final String TAG = "GmailClass";
 
-    public void startAlertG(){
+    // Method for write in firebase.
+    public void alertGmail(boolean isNotifPosted){
         Log.i(TAG,"startAlertG");
-        Firebase.setAndroidContext(MyActivity.getAppContext());
-        ref = new Firebase("https://flickering-inferno-1612.firebaseio.com/Users");
-        userChild = ref.child("User1");
-        appChild = userChild.child("Gmail");
+        ref = new Firebase("https://flickering-inferno-1612.firebaseio.com/Users"); // Main url in the firebase.
+        userChild = ref.child("User2"); // Child url for the user.
+        appChild = userChild.child("Gmail"); // Child url for app.
 
-        //appChild.setValue(123);
-
-        appChild.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData data) {
-                if (data.getValue() == null){
-                    Log.i(TAG, "Gmail is null");
-                    data.setValue(1);
+        if (isNotifPosted){
+            // Transaction for add an pointer for the notification.
+            appChild.runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData data) {
+                    if (data.getValue() == null){
+                        // The value is one if this is the first notification.
+                        data.setValue(1);
+                    }
+                    return Transaction.success(data);
                 }
-                return Transaction.success(data);
-            }
 
-            @Override
-            public void onComplete(FirebaseError firebaseError, boolean b, DataSnapshot dataSnapshot) {
+                @Override
+                public void onComplete(FirebaseError firebaseError, boolean b, DataSnapshot dataSnapshot) {
 
-            }
-        });
+                }
+            });
+        }
+        else{
+            // Transaction for delete an pointer for the notification.
+            appChild.runTransaction(new Transaction.Handler() {
+                @Override
+                public Transaction.Result doTransaction(MutableData data) {
+                    if (data.getValue() != null){
+                        // Delete the pointer if exist one or more notifications.
+                        data.setValue(0);
+                    }
+
+                    return Transaction.success(data);
+                }
+
+                @Override
+                public void onComplete(FirebaseError firebaseError, boolean b, DataSnapshot dataSnapshot) {
+
+                }
+            });
+        }
     }
 }
